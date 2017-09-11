@@ -1,8 +1,8 @@
 <div class="jumbotron">
   <h1> This is your login Page </h1>
-<form>
-  <input type="text"> 
-  <input type="text">
-  <input type="submit">
+<form (submit)=authenticate()>
+  <input id="login_txtusername" name="login_txtusername" class="form-control" type="text" required [(ngModel)]=username> 
+  <input id="login_txtpassword" name="login_txtpassword" class="form-control" type="text" required [(ngModel)]=password>
+  <input type="submit" class="btn btn-action" value="Sign in">
 </form>
 </div>
