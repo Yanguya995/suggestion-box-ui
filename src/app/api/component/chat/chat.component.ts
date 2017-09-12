@@ -13,13 +13,15 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     if (this.loginService.isUserLoggedin()) {
+
       this.getUserChatData();
+      this.router.navigate(['/chat']);
     } else {
       this.router.navigate(['']);
     }
   }
 
   getUserChatData() {
-
+    //implementation to pull a specific user data and populate the ui accordingly,
   }
 }
