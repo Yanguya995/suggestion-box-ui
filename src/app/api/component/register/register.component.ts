@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from '../login/login.service';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, Validators, FormControl, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
 import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-register',
-  templateUrl: '../register/register.component.html',
-  styleUrls: ['../register/register.component.css']
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   constructor() {}
   newuser: User = new User();
   months = [
-    { name: 'January' },
+    { name: 'January'},
     { name: 'February' },
     { name: 'March' },
     { name: 'April' },
@@ -62,7 +59,7 @@ export class RegisterComponent implements OnInit {
       'name': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
       'pass': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
       'cpass': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
-      'occupation': new FormControl('', [Validators.required, this.passwordsAreTheSame('pass'), Validators.pattern(/^[a-zA-Z]+$/i)]),
+      'occupation': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
       'gender': new FormControl('', [Validators.required, this.forbiddenValueValidator(/--Select Gender--/i)]),
       'year': new FormControl('', [Validators.required, this.forbiddenValueValidator(/--Year--/i)]),
       'month': new FormControl('', [Validators.required, this.forbiddenValueValidator(/--Month--/i)]),
@@ -80,60 +77,15 @@ export class RegisterComponent implements OnInit {
   passwordsAreTheSame(value: string): ValidatorFn {
     return null;
   }
-}
 
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [LoginService]
-})
-
-export class LoginComponent implements OnInit {
-  constructor(private loginService: LoginService, private router: Router) { }
-  loginForm: FormGroup;
-  username: String;
-  password: String;
-  body = {
-    username: this.username,
-    password: this.password
-  };
-
-  ngOnInit() {
-    this.validateForm();
-  }
-
-  validateForm() {
-    this.loginForm = new FormGroup({
-      'username': new FormControl('', [Validators.required, Validators.pattern('[^ @]*@[^ @]*')]),
-      'password': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)])
-    });
-  }
-
-  forbiddenValueValidator(value: RegExp): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      const forbidden = value.test(control.value);
-      return forbidden ? { 'forbidden': { value: control.value } } : null;
-    };
-  }
-
-  authenticate() {
-    debugger;
-    this.body.username = this.username;
-    this.body.password = this.password;
-    this.loginService.isUserValid(this.body)
-      .subscribe(
-      data => {
-        if (data.token) {
-          window.localStorage.setItem('token', data.token);
-          window.localStorage.setItem('id', data.user);
-          debugger;
-          this.router.navigate(['/profile']);
-        } else {
-          this.router.navigate(['']);
-        }
-      },
-      err => console.log(err),
-      () => console.log('request complete'));
+  addNewUser() {
+    this.newuser.email = this.registerForm.get('email').value;
+    this.newuser.name = this.registerForm.get('name').value;
+    this.newuser.password = this.registerForm.get('pass').value;
+    this.newuser.occupation = this.registerForm.get('occupation').value;
+    this.newuser.gender = this.registerForm.get('gender').value;
+    this.newuser.dob = this.registerForm.get('year').value + '-' + this.registerForm.get('month').value + '-' +
+     this.registerForm.get('day').value;
+    alert(JSON.stringify(this.newuser));
   }
 }

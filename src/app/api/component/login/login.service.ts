@@ -5,20 +5,21 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class LoginService {
   constructor(private http: Http) { }
-  token = window.localStorage.getItem('token');
+  token: String;
 
- isUserValid(data) {
-   debugger;
+  isUserValid(data) {
    const headers = new Headers ({'content-type': 'application/json'});
-   const options = new RequestOptions({
+   const options = new RequestOptions ({
      headers: headers,
      body: data
-      });
+    });
 
-  return this.http.post('http://localhost:3000/login', options.body)
-  .map(res => res.json());
-}
-isUserLoggedin() {
+    return this.http.post('http://localhost:3000/login', options.body)
+    .map(res => res.json());
+  }
+
+  isUserLoggedin() {
+  this.token = window.localStorage.getItem('token');
   if (this.token) {
     return true;
   }else {
