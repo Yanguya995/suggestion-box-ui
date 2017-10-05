@@ -1,28 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
 import { User } from '../../../models/user';
-
+import { RegisterService } from '../../component/register/register.service';
+import { Observable } from 'rxjs/Rx';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
+  providers: [RegisterService]
+
 })
 export class RegisterComponent implements OnInit {
-  constructor() {}
+  constructor(private registerService: RegisterService) {}
   newuser: User = new User();
   months = [
-    { name: 'January'},
-    { name: 'February' },
-    { name: 'March' },
-    { name: 'April' },
-    { name: 'May' },
-    { name: 'June' },
-    { name: 'July' },
-    { name: 'August' },
-    { name: 'September' },
-    { name: 'October' },
-    { name: 'November' },
-    { name: 'December' }
+    { value: 1},
+    { value: 2 },
+    { value: 3 },
+    { value: 4 },
+    { value: 5 },
+    { value: 6 },
+    { value: 7 },
+    { value: 8 },
+    { value: 9 },
+    { value: 10 },
+    { value: 11 },
+    { value: 12 }
   ];
 
   selectedDay: number;
@@ -36,7 +39,6 @@ export class RegisterComponent implements OnInit {
     this.populateDays();
     this.populateYears();
     this.validateForm();
-    this.newuser = new User();
   }
 
   populateDays() {
@@ -56,10 +58,10 @@ export class RegisterComponent implements OnInit {
   validateForm() {
     this.registerForm = new FormGroup({
       'email': new FormControl('', [Validators.required, Validators.pattern('[^ @]*@[^ @]*')]),
-      'name': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
-      'pass': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
-      'cpass': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
-      'occupation': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)]),
+      'name': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z a-zA-Z]+$/i)]),
+      'pass': new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^[a-zA-Z0-9!@#$%^&*?]+$/i)]),
+      'cpass': new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^[a-zA-Z0-9!@#$%^&*?]+$/i)]),
+      'occupation': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z a-zA-Z]+$/i)]),
       'gender': new FormControl('', [Validators.required, this.forbiddenValueValidator(/--Select Gender--/i)]),
       'year': new FormControl('', [Validators.required, this.forbiddenValueValidator(/--Year--/i)]),
       'month': new FormControl('', [Validators.required, this.forbiddenValueValidator(/--Month--/i)]),
@@ -79,13 +81,18 @@ export class RegisterComponent implements OnInit {
   }
 
   addNewUser() {
+    this.newuser = new User();
     this.newuser.email = this.registerForm.get('email').value;
     this.newuser.name = this.registerForm.get('name').value;
     this.newuser.password = this.registerForm.get('pass').value;
     this.newuser.occupation = this.registerForm.get('occupation').value;
     this.newuser.gender = this.registerForm.get('gender').value;
-    this.newuser.dob = this.registerForm.get('year').value + '-' + this.registerForm.get('month').value + '-' +
-     this.registerForm.get('day').value;
-    alert(JSON.stringify(this.newuser));
+    this.newuser.date_of_birth = new Date();
+    this.newuser.date_of_birth.setFullYear(this.registerForm.get('year').value,
+    this.registerForm.get('month').value, this.registerForm.get('day').value);
+    console.log(this.newuser);
+    this.registerService.registerNewUser(this.newuser).subscribe(
+      data => console.log(data));
+
   }
 }
