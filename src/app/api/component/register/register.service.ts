@@ -7,6 +7,7 @@ export class RegisterService {
   constructor(private http: Http) { }
 
   registerNewUser(newUser: User) {
+    debugger;
     return this.http.options('http://localhost:3000/login/reg', {
       method: 'POST',
       body: newUser

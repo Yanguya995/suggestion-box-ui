@@ -93,6 +93,7 @@ export class RegisterComponent implements OnInit {
     console.log(this.newuser);
     this.registerService.registerNewUser(this.newuser).subscribe(
       data => console.log(data));
+      
 
   }
 }

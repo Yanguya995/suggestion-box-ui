@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   validateForm() {
     this.loginForm = new FormGroup({
       'username': new FormControl('', [Validators.required, Validators.pattern('[^ @]*@[^ @]*')]),
-      'password': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/i)])
+      'password': new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/i)])
     });
   }
 
@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
   }
 
   authenticate() {
+    debugger;
     this.body.username = this.loginForm.get('username').value;
     this.body.password = this.loginForm.get('password').value;
     this.loginService.isUserValid(this.body)
