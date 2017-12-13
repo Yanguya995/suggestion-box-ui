@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.validateForm();
     if (this.loginService.isUserLoggedin()) {
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/landing']);
     }
   }
 
@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
   }
 
   authenticate() {
-    debugger;
     this.body.username = this.loginForm.get('username').value;
     this.body.password = this.loginForm.get('password').value;
     this.loginService.isUserValid(this.body)
@@ -53,8 +52,9 @@ export class LoginComponent implements OnInit {
         if (data.token) {
           window.localStorage.setItem('token', data.token);
           window.localStorage.setItem('id', data.user);
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/landing']);
         } else {
+          alert(JSON.stringify(data));
           this.router.navigate(['']);
         }
       },

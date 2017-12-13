@@ -3,6 +3,8 @@ import { FormGroup, Validators, FormControl, ReactiveFormsModule, AbstractContro
 import { User } from '../../../models/user';
 import { RegisterService } from '../../component/register/register.service';
 import { Observable } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -11,10 +13,10 @@ import { Observable } from 'rxjs/Rx';
 
 })
 export class RegisterComponent implements OnInit {
-  constructor(private registerService: RegisterService) {}
+  constructor(private registerService: RegisterService, private router: Router) { }
   newuser: User = new User();
   months = [
-    { value: 1},
+    { value: 1 },
     { value: 2 },
     { value: 3 },
     { value: 4 },
@@ -89,11 +91,22 @@ export class RegisterComponent implements OnInit {
     this.newuser.gender = this.registerForm.get('gender').value;
     this.newuser.date_of_birth = new Date();
     this.newuser.date_of_birth.setFullYear(this.registerForm.get('year').value,
-    this.registerForm.get('month').value, this.registerForm.get('day').value);
+      this.registerForm.get('month').value, this.registerForm.get('day').value);
     console.log(this.newuser);
-    this.registerService.registerNewUser(this.newuser).subscribe(
-      data => console.log(data));
-      
+    this.registerService.registerNewUser(this.newuser)
+      .subscribe(
+      data => {
+        if (data == null) {
+          alert('Could not create the new manual task');
+        } else {
+          this.router.navigate(['/profile']);
+        }
+      },
+      err => console.log(err),
+      () => console.log('Request Add New user Complete'));
+  }
 
+  private showErrorMessage(message: string) {
+    //this.toastManager.error(message, 'Something went wrong!', { toastLife: 5000, showCloseButton: true });
   }
 }

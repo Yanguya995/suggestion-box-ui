@@ -9,10 +9,10 @@ export class LoginService {
   id: string;
 
   isUserValid(data) {
-    const headers = new Headers({ 'content-type': 'application/json' });
+    const headers = new Headers({ 'content-type': 'application/json', });
     const options = new RequestOptions({
       headers: headers,
-      body: data
+      body: data,
     });
 
     return this.http.post('http://localhost:3000/login', options.body)
@@ -24,7 +24,7 @@ export class LoginService {
     this.id = window.localStorage.getItem('id');
     if (this.token && this.id) {
       return true;
-    }else {
+    } else {
       return false;
     }
   }

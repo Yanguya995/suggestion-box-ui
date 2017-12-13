@@ -14,10 +14,11 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
   token = window.localStorage.getItem('token');
   id = window.localStorage.getItem('id');
+  constructor(private http: Http, private loginService: LoginService, private router: Router) {
 
-  constructor(private http: Http, private loginService: LoginService, private router: Router) { }
+  }
   loggedInUser: User;
-  headers: Headers = new Headers({ 'content-type': 'application/json', 'authorization' : this.token });
+  headers: Headers = new Headers({ 'content-type': 'application/json', 'authorization': this.token });
   ngOnInit() {
     if (this.loginService.isUserLoggedin()) {
       this.getData();
@@ -29,11 +30,25 @@ export class ProfileComponent implements OnInit {
   getData() {
     this.loggedInUser = new User();
     this.http.options('http://localhost:3000/users/' + this.id, {
-      method  : 'GET',
-      headers : this.headers
+      method: 'GET',
+      headers: this.headers
     }).map(res => res.json())
-    .subscribe(data => {this.loggedInUser = {id : data._id, name: data.name,
-      password: data.password, email: data.email, date_of_birth: data.date_of_birth,
-      occupation: data.occupation, gender: data.gender}; console.log(this.loggedInUser); });
+      .subscribe(data => {
+        this.loggedInUser = {
+          id: data._id, name: data.name,
+          password: data.password, email: data.email, date_of_birth: data.date_of_birth,
+          occupation: data.occupation, gender: data.gender
+        }; console.log(this.loggedInUser);
+      });
+  }
+
+  updateProfile() {
+
+  }
+
+  logout() {
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('id');
+    this.router.navigate(['']);
   }
 }

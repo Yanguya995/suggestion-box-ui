@@ -9,14 +9,16 @@ import { ProfileComponent } from './api/component/profile/profile.component';
 import { ChatComponent } from './api/component/chat/chat.component';
 import { LoginComponent } from './api/component/login/login.component';
 import { Routing } from './router';
-import { RegisterComponent} from './api/component/register/register.component';
+import { RegisterComponent } from './api/component/register/register.component';
+import { LandingComponent } from './api/component/landing/landing.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ChatComponent,
     ProfileComponent,
-    RegisterComponent
+    RegisterComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,
