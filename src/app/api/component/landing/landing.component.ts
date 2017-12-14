@@ -12,6 +12,8 @@ import { map } from 'rxjs/operator/map';
 import { forEach } from '@angular/router/src/utils/collection';
 import { log } from 'util';
 import { element } from 'protractor';
+import * as moment from 'moment';
+import { DatePipe } from '@angular/common/src/pipes';
 
 @Component({
   selector: 'app-landing',
@@ -22,14 +24,20 @@ export class LandingComponent implements OnInit {
   isPostsNull: boolean = false;
   token: String = window.localStorage.getItem('token');
   id: String = window.localStorage.getItem('id');
-  message: String = "";
+  postBody = {
+    chatId: "",
+    body: ""
+  }
+  chatBody: String = "";
+  chatTitle: String = "";
   post: Post;
   chat: Chat;
   avatar: Avatar;
   listOfChats: Chat[];
   listOfAvatars: Avatar[];
   currentAvatar: Avatar;
-
+  changedChat: String;
+  message: String = "";
   constructor(private http: Http, private loginService: LoginService, private router: Router) { }
   loggedInUser: User;
   headers: Headers = new Headers({ 'content-type': 'application/json', 'authorization': this.token });
@@ -46,8 +54,8 @@ export class LandingComponent implements OnInit {
   }
 
   createNewChat() {
-    this.chat = new Chat("This is another title", this.message, null, this.avatar);
-    this.http.options('http://localhost:3000/chats/', {
+    this.chat = new Chat(null, this.chatTitle, this.chatBody, null, this.currentAvatar.id);
+    this.http.options('http://localhost:3000/chats', {
       method: 'POST',
       body: this.chat,
       headers: this.headers
@@ -56,14 +64,24 @@ export class LandingComponent implements OnInit {
       .subscribe(data => console.log(data));
   }
 
-  sendPost() {
-    if (this.currentAvatar == null) {
-      alert('No Data');
-    } else {
-      alert('Have Data')
-    }
-
+  postMessageChanged($event, chatId: any) {
+    this.postBody.chatId = chatId;
+    this.postBody.body = $event;
   }
+
+  sendPost(chatId: String) {
+    if (this.postBody.chatId === chatId) {
+      this.post = new Post(this.postBody.chatId, this.currentAvatar.id, this.postBody.body);
+      this.http.options('http://localhost:3000/posts', {
+        method: 'POST',
+        body: this.post,
+        headers: this.headers
+      })
+        .map(res => res.json())
+        .subscribe(data => console.log(data));
+    }
+  }
+
   getData() {
     this.loggedInUser = new User();
     this.http.options('http://localhost:3000/users/' + this.id, {
@@ -105,6 +123,7 @@ export class LandingComponent implements OnInit {
         });
       });
   }
+
   getChats() {
     this.listOfChats = [];
     this.http.options('http://localhost:3000/chats/', {
@@ -113,6 +132,12 @@ export class LandingComponent implements OnInit {
     }).map(res => res.json())
       .subscribe(data => {
         data.forEach(element => {
+          console.log(element);
+          if (element.post !== null && element.post.length > 0) {
+            for (var i = 0; i < element.post.length; i++) {
+              element.post[i].createdDate = moment(element.post[i].createdDate).fromNow();
+            }
+          }
           this.listOfChats.push(element);
         });
       })

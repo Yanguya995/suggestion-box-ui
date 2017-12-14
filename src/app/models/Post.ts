@@ -1,12 +1,13 @@
-import { Avatar } from './Avatar';
-import { Chat } from './Chat';
 
-export class Post {
-    avatar: Avatar;
-    chat: Chat;
+export interface IPost{
+    avatar: String;
+    chat: String;
+    body: String;    
+}
+export class Post implements IPost {
     createdDate: Date;
-    body: String
     likes: Number;
     tags: [String];
-    constructor() {}
+    constructor(public chat: String, public avatar: String
+    ,public body: String) {}
 }

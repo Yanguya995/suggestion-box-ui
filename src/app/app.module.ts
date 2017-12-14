@@ -18,7 +18,7 @@ import { LandingComponent } from './api/component/landing/landing.component';
     ChatComponent,
     ProfileComponent,
     RegisterComponent,
-    LandingComponent
+    LandingComponent,
   ],
   imports: [
     BrowserModule,

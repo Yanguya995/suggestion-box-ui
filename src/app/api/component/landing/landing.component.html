@@ -7,25 +7,25 @@
     </div>
   </div>
 </div>
-
 <div style="border-bottom:yellow solid 3px">
   <span style="padding-bottom: 0px;"></span>
 </div>
-
 <div style="margin-top: 10px; width:100%">
   <div style="margin-left:2.5%; border: solid purple 1px; width: 20%; float: left">
     <header style="text-align: center"> Hottest Topics </header>
 
     <body style=" border: solid yellow 1px;"> Please </body>
   </div>
-
   <div style="margin-left:2%; display:inline-block; width:46%; border: solid red 1px">
     <header style="margin: 5%; width:90%;">
       <div>
         <div *ngFor="let item of listOfAvatars">
-          {{item.name}}
+
+          <body style="display: inline-block; font-size:70%">Posting as</body>
+          <strong> {{item.name}} </strong>
         </div>
-        <input type="text" style="width: 100%" [(ngModel)]="message" placeholder="Say Something" />
+        <input type="text" style="border:0px; width: 100%" [(ngModel)]="chatTitle" placeholder="Title" />
+        <textarea style="border:0px; width: 100%" [(ngModel)]="chatBody" placeholder="Body"></textarea>
         <button style="display: block" class="btn" (click)="createNewChat()"> post </button>
       </div>
     </header>
@@ -36,23 +36,34 @@
             <h5> {{chat.title}}</h5>
           </div>
           <div style="margin-right: 10px; float:right">
-            <img src="" /> {{chat.owner.name}}
+            {{chat.owner.name}}
           </div>
         </header>
         <hr>
         <p style="margin-left: 10px; margin-bottom: 10px;">
           {{chat.body}}
         </p>
-        <div style="max-height:50px; overflow-y:auto;">
-          <div style="  margin-left:5%; width:70%; margin-bottom:1%; font-size:80%; color:gray;" *ngFor="let item of chat.post">
-            <strong> {{item.avatar.name}}</strong>, {{item.body}}
+        <div style="max-height:150px; overflow-y:auto;">
+          <div *ngFor="let item of chat.post">
+            <div style="display:inline-block; margin-left:5%;width:80%; margin-bottom:1%;  color:gray;">
+              <h6 style="font-size:80%; margin:0px; display:inline-block">
+                <strong >{{item.avatar.name}}</strong>
+              </h6>
+              _+ {{item.body}}
+            </div>
+            <div style="width:13%;  text-align:right; display:inline-block; font-size:60%; color:gray; ">
+              <i>
+                <h6 style="font-size: 80%; margin-right:0px;">{{item.createdDate}}</h6>
+              </i>
+            </div>
           </div>
         </div>
         <footer style="width:100%; border:solid lightgray 1px; text-align: left">
           <i style="margin:1%;" class="fa fa-heart"></i>
           <i style="margin:1%;" class="fa fa-share"></i>
           <i style="margin:1%" class="fa fa-arrow-up"></i>
-          <input type="text" style="margin: 1%; width: 60%"> <i class="fa fa-send" (click)="sendPost()"></i>
+          <input type="text" [ngModel]="message" (ngModelChange)="postMessageChanged($event,chat._id)" style="margin: 1%; width: 60%">
+          <i class="fa fa-send" (click)="sendPost(chat._id)"></i>
         </footer>
       </div>
     </div>
